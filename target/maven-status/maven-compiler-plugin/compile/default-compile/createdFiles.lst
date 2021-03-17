@@ -1,0 +1,5 @@
+com\rastelligualtieri\trainingschedule\server\restfulservice\RestfulController.class
+com\rastelligualtieri\trainingschedule\server\service\RequestServiceBean.class
+com\rastelligualtieri\trainingschedule\server\apiresponse\ApiResponse.class
+com\rastelligualtieri\trainingschedule\server\apiresponse\ApiResponse$ApiResponseBuilder.class
+com\rastelligualtieri\trainingschedule\server\Application.class
