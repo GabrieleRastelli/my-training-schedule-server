@@ -19,9 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Service
-public class UpdateScheduleServiceBean {
+public class CreateScheduleServiceBean {
 
-    private static Logger log = LoggerFactory.getLogger(UpdateScheduleServiceBean.class);
+    private static Logger log = LoggerFactory.getLogger(CreateScheduleServiceBean.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -29,10 +29,10 @@ public class UpdateScheduleServiceBean {
     @Autowired
     private ScheduleRepository scheduleRepository;
 
-    public ResponseEntity<ApiResponse> updateSchedule(HttpServletRequest request){
+    public ResponseEntity<ApiResponse> createSchedule(HttpServletRequest request){
 
         String guid = request.getParameter("guid");
-        Long scheduleIdToSearch = Long.parseLong(request.getParameter("schedule"));
+        Long scheduleToSearch = Long.parseLong(request.getParameter("schedule"));
         String dataJson = request.getParameter("dataJson");
         String title = request.getParameter("title");
         String description = request.getParameter("description");
@@ -42,24 +42,11 @@ public class UpdateScheduleServiceBean {
         if(userToSearch==null){
             log.warn("[Host: '{}', IP: '{}', Port: '{}'] Tried to login but guid: '{}' is not registered in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "Wrong guid.", "/updateschedule", HttpStatus.UNAUTHORIZED.value()));
+                    .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "Wrong guid.", "/createschedule", HttpStatus.UNAUTHORIZED.value()));
         }
 
         /* check that schedule exists */
-        ScheduleEntity scheduleFound = scheduleRepository.findByScheduleId(scheduleIdToSearch);
-
-        if(scheduleFound == null){
-            log.error("[Host: '{}', IP: '{}', Port: '{}'] Tried to modify schedule: '{}' is not in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), scheduleIdToSearch);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "Wrong guid.", "/updateschedule", HttpStatus.UNAUTHORIZED.value()));
-        }
-        else{
-            /* update schedule */
-            scheduleFound.setUserId(userToSearch.getUserId());
-            scheduleFound.setTitle(title);
-            scheduleFound.setDescription(description);
-            scheduleFound.setDataJson(dataJson);
-        }
+        ScheduleEntity scheduleFound = new ScheduleEntity(userToSearch.getUserId(), dataJson, title, description);
 
         /* insert schedule */
         try{
@@ -70,7 +57,7 @@ public class UpdateScheduleServiceBean {
         }
 
         /* return ack */
-        return ResponseEntity.ok(ApiResponse.resultOk("/updateschedule", "Schedule insertion successfull."));
+        return ResponseEntity.ok(ApiResponse.resultOk("/createschedule", "Schedule insertion successfull."));
 
     }
 

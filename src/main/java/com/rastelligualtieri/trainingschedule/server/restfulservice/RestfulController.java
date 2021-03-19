@@ -29,6 +29,9 @@ public class RestfulController {
     private ScheduleInfoServiceBean scheduleInfoService;
 
     @Autowired
+    private CreateScheduleServiceBean createScheduleService;
+
+    @Autowired
     private UpdateScheduleServiceBean updateScheduleService;
 
 
@@ -55,6 +58,11 @@ public class RestfulController {
     @PostMapping(path = "/scheduleinfo", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> scheduleInfoEndpoint(HttpServletRequest request) {
         return scheduleInfoService.getScheduleInfo(request);
+    }
+
+    @PostMapping(path = "/createschedule", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> createScheduleEndpoint(HttpServletRequest request) {
+        return createScheduleService.createSchedule(request);
     }
 
     @PostMapping(path = "/updateschedule", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
