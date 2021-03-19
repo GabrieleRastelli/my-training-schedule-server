@@ -1,6 +1,9 @@
 package com.rastelligualtieri.trainingschedule.server.service;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.rastelligualtieri.trainingschedule.server.apiresponse.ApiResponse;
 import com.rastelligualtieri.trainingschedule.server.model.UserEntity;
 import com.rastelligualtieri.trainingschedule.server.model.UserRepository;
@@ -14,6 +17,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 @Service
 public class RegisterServiceBean {
@@ -39,23 +43,35 @@ public class RegisterServiceBean {
         if(userRepository.findByEmail(email)!=null){
             log.warn("[Host: '{}', IP: '{}', Port: '{}'] Tried to register but email: '{}' is already registered in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), email);
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
-                    .body(ApiResponse.resultKo(HttpStatus.TOO_MANY_REQUESTS.toString(), "You are already registered.", "/sendData", HttpStatus.TOO_MANY_REQUESTS.value()));
+                    .body(ApiResponse.resultKo(HttpStatus.TOO_MANY_REQUESTS.toString(), "You are already registered.", "/register", HttpStatus.TOO_MANY_REQUESTS.value()));
         }
 
         /* encrypts password */
         String hashCalculated = DigestUtils.sha256Hex(passwd + "8b7db488-1d18-4827-81a2-326cdc4b3bb9");
 
-        /* if not already inserted insterts new user */
-        UserEntity userToInsert = new UserEntity(name, email, passwd);
+        /* assign guid */
+        String guid = UUID.randomUUID().toString();
+
+        /* if not already registered insterts new user */
+        UserEntity userToInsert = new UserEntity(guid, name, email, hashCalculated);
 
         try{
             this.insert(userToInsert);
         }catch(Exception e){
             log.error("[Host: '{}', IP: '{}', Port: '{}'] Tried to register but error: '{}' occurred while inserting data.", request.getHeader("Host"), request.getRemoteAddr(), request.getServerPort(), e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error inserting data in DB.");
         }
 
-        return ResponseEntity.ok(ApiResponse.resultOk("/register", "Data insertion succesful."));
+        /* returns guid */
+        try {
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            String jsonGuid = ow.writeValueAsString(guid);
+            log.info("[Host: '{}', IP: '{}', Port: '{}'] Host correctly registered. Assigned guid: '{}'.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
+            return ResponseEntity.ok(ApiResponse.resultOk("/register", jsonGuid.replaceAll("\\\"","")));
+        } catch (JsonProcessingException e) {
+            log.error("[Host: '{}', IP: '{}', Port: '{}'] Error JSON parsing guid: '{}'.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error json parsing guid.");
+        }
     }
 
     public void insert(UserEntity request) {

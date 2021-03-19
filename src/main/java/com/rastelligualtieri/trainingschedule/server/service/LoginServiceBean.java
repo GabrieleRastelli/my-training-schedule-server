@@ -16,18 +16,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @Service
 public class LoginServiceBean {
 
-    private static Logger log = LoggerFactory.getLogger(RegisterServiceBean.class);
+    private static Logger log = LoggerFactory.getLogger(LoginServiceBean.class);
 
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private ScheduleRepository scheduleRepository;
 
     public ResponseEntity<ApiResponse> loginUser(HttpServletRequest request){
 
@@ -39,27 +36,29 @@ public class LoginServiceBean {
         if(userToSearch==null){
             log.warn("[Host: '{}', IP: '{}', Port: '{}'] Tried to login but email: '{}' is not registered in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), email);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "You are not registered.", "/login", HttpStatus.UNAUTHORIZED.value()));
+                    .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "User not registered.", "/login", HttpStatus.UNAUTHORIZED.value()));
         }
 
         /* check that passwd is correct */
         String hashedSentPassword = DigestUtils.sha256Hex(passwd + "8b7db488-1d18-4827-81a2-326cdc4b3bb9");
         boolean passwdSentIsCorrect = userToSearch.getPassword().equals(hashedSentPassword);
         if(!passwdSentIsCorrect){
+            log.warn("[Host: '{}', IP: '{}', Port: '{}'] Tried to login but password is not registered in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), hashedSentPassword);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "You are not registered.", "/login", HttpStatus.UNAUTHORIZED.value()));
+                    .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "Password is wrong.", "/login", HttpStatus.UNAUTHORIZED.value()));
         }
 
-        List<Object> schedulesGenericInfo = scheduleRepository.findSchedulesGenericInfo(userToSearch.getUserId());
+        String guid = userToSearch.getGuid();
 
-        /* converts list in json */
+        /* returns guid */
         try {
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-            String jsonSchedules = ow.writeValueAsString(schedulesGenericInfo);
-            return ResponseEntity.ok(ApiResponse.resultOk("/login", jsonSchedules));
+            String jsonGuid = ow.writeValueAsString(guid);
+            log.info("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Host correctly login.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
+            return ResponseEntity.ok(ApiResponse.resultOk("/login", jsonGuid.replaceAll("\\\"","")));
         } catch (JsonProcessingException e) {
-            log.warn("[Host: '{}', IP: '{}', Port: '{}'] Error JSON parsing schedule generic infos.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
+            log.error("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Error JSON parsing guid: '{}'.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error json parsing guid.");
         }
     }
 }

@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Entity
 @Table( name = "USER_INFO",
         indexes = {
-                @Index(columnList="email", name="email_index"),
+                //@Index(columnList="userId", name="user_id_index"),
         })
 public class UserEntity {
     @Id
@@ -23,7 +23,12 @@ public class UserEntity {
     private Long userId;
 
     @Column(nullable = false)
+    private String guid;
+
+    @Column(nullable = false)
     private String name;
+
+
 
     @Column(unique=true, nullable = false)
     private String email;
@@ -35,13 +40,21 @@ public class UserEntity {
 
     }
 
-    public UserEntity( String nome, String email, String password) {
+    public UserEntity( String guid, String nome, String email, String password) {
         super();
+        this.setGuid(guid);
         this.setName(nome);
         this.setEmail(email);
         this.setPassword(password);
     }
 
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
+    }
     public Long getUserId() {
         return userId;
     }

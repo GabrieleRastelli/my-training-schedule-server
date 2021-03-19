@@ -1,14 +1,12 @@
 package com.rastelligualtieri.trainingschedule.server.restfulservice;
 
 import com.rastelligualtieri.trainingschedule.server.apiresponse.ApiResponse;
-import com.rastelligualtieri.trainingschedule.server.service.LoginServiceBean;
-import com.rastelligualtieri.trainingschedule.server.service.RegisterServiceBean;
+import com.rastelligualtieri.trainingschedule.server.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,22 +14,52 @@ import javax.servlet.http.HttpServletRequest;
 public class RestfulController {
 
     @Autowired
+    private RegisterServiceBean registerService;
+
+    @Autowired
     private LoginServiceBean loginService;
 
     @Autowired
-    private RegisterServiceBean registerService;
+    private HomeInfoServiceBean homeInfoService;
 
+    @Autowired
+    private ExerciseServiceBean exerciseService;
 
-    //@RequestMapping("/login")
-    @PostMapping(path = "/login", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse> loginEndpoint(HttpServletRequest request) {
-        return loginService.loginUser(request);
-    }
+    @Autowired
+    private ScheduleInfoServiceBean scheduleInfoService;
+
+    @Autowired
+    private UpdateScheduleServiceBean updateScheduleService;
+
 
     @PostMapping(path = "/register", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> registerEndpoint(HttpServletRequest request) {
         return registerService.registerUser(request);
     }
 
+    @PostMapping(path = "/login", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> loginEndpoint(HttpServletRequest request) {
+        return loginService.loginUser(request);
+    }
+
+    @PostMapping(path = "/homeinfo", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> getHomeInfo(HttpServletRequest request) {
+        return homeInfoService.getHomeInfo(request);
+    }
+
+    @PostMapping(path = "/exercise", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> exerciseEndpoint(HttpServletRequest request) {
+        return exerciseService.getExercises(request);
+    }
+
+    @PostMapping(path = "/scheduleinfo", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> scheduleInfoEndpoint(HttpServletRequest request) {
+        return scheduleInfoService.getScheduleInfo(request);
+    }
+
+    @PostMapping(path = "/updateschedule", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> updateScheduleEndpoint(HttpServletRequest request) {
+        return updateScheduleService.updateSchedule(request);
+    }
 
 }

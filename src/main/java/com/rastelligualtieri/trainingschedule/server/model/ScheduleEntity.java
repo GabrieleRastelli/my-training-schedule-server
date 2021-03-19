@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table( name = "SCHEDULE",
         indexes = {
-                @Index(columnList="userId", name="user_id_index"),
+                //@Index(columnList="scheduleId", name="schedule_id_index"),
         })
 public class ScheduleEntity {
 
@@ -20,7 +20,7 @@ public class ScheduleEntity {
 
     @Lob
     @Column(nullable = false)
-    private String dataXml;
+    private String dataJson;
 
     @Column(nullable = false)
     private String title;
@@ -29,7 +29,17 @@ public class ScheduleEntity {
     private String description;
 
     @Column(nullable = true)
-    private int downloads;
+    private Integer downloads;
+
+    public ScheduleEntity(){ }
+
+    public ScheduleEntity(Long userId,String dataJson, String title, String description){
+        super();
+        this.setUserId(userId);
+        this.setDataJson(dataJson);
+        this.setTitle(title);
+        this.setDescription(description);
+    }
 
     public Long getScheduleId() {
         return scheduleId;
@@ -47,12 +57,12 @@ public class ScheduleEntity {
         this.userId = userId;
     }
 
-    public String getDataXml() {
-        return dataXml;
+    public String getDataJson() {
+        return dataJson;
     }
 
-    public void setDataXml(String dataXml) {
-        this.dataXml = dataXml;
+    public void setDataJson(String dataJson) {
+        this.dataJson = dataJson;
     }
 
     public String getTitle() {
@@ -71,11 +81,11 @@ public class ScheduleEntity {
         this.description = description;
     }
 
-    public int getDownloads() {
+    public Integer getDownloads() {
         return downloads;
     }
 
-    public void setDownloads(int downloads) {
+    public void setDownloads(Integer downloads) {
         this.downloads = downloads;
     }
 }

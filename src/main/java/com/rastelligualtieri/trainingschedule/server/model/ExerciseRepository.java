@@ -1,18 +1,14 @@
 package com.rastelligualtieri.trainingschedule.server.model;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, String> {
+public interface ExerciseRepository extends JpaRepository<ExerciseEntity, String> {
 
-    List<UserEntity> findByName(String name);
+    List<ExerciseEntity> findAll();
 
-    UserEntity findByEmail(String email);
-
-    UserEntity findByGuid(String guid);
 }
