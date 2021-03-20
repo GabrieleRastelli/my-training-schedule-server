@@ -2,11 +2,12 @@ package com.rastelligualtieri.trainingschedule.server.service;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.rastelligualtieri.trainingschedule.server.apiresponse.ApiResponse;
 import com.rastelligualtieri.trainingschedule.server.model.*;
-import org.apache.commons.codec.digest.DigestUtils;
+import com.rastelligualtieri.trainingschedule.server.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,17 +37,16 @@ public class ExerciseServiceBean {
         /* check that user is registered */
         UserEntity userToSearch = userRepository.findByGuid(guid);
         if(userToSearch==null){
-            log.warn("[Host: '{}', IP: '{}', Port: '{}'] Tried to login but guid: '{}' is not registered in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
+            log.warn("[Host: '{}', IP: '{}', Port: '{}'] Tried to get all exercises but guid: '{}' is not registered in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "You are not registered.", "/exercise", HttpStatus.UNAUTHORIZED.value()));
+                    .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "Wrong guid.", "/exercise", HttpStatus.UNAUTHORIZED.value()));
         }
 
         List<ExerciseEntity> allExercises = ExerciseRepository.findAll();
 
         try {
-            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-            String jsonExercise = ow.writeValueAsString(allExercises);
-            return ResponseEntity.ok(ApiResponse.resultOk("/exercise", jsonExercise));
+            String jsonExercises = JsonUtils.objectToJson(allExercises);
+            return ResponseEntity.ok(ApiResponse.resultOk("/exercise", "Extraction succesful.",jsonExercises));
         } catch (JsonProcessingException e) {
             log.error("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Error JSON parsing allExercises: '{}'.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid, e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error json parsing.");

@@ -1,12 +1,8 @@
 package com.rastelligualtieri.trainingschedule.server.service;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.rastelligualtieri.trainingschedule.server.apiresponse.ApiResponse;
 import com.rastelligualtieri.trainingschedule.server.model.*;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @Service
 public class UpdateScheduleServiceBean {
@@ -40,7 +35,7 @@ public class UpdateScheduleServiceBean {
         /* check that user is registered */
         UserEntity userToSearch = userRepository.findByGuid(guid);
         if(userToSearch==null){
-            log.warn("[Host: '{}', IP: '{}', Port: '{}'] Tried to login but guid: '{}' is not registered in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
+            log.warn("[Host: '{}', IP: '{}', Port: '{}'] Tried to update schedule but guid: '{}' is not registered in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "Wrong guid.", "/updateschedule", HttpStatus.UNAUTHORIZED.value()));
         }
@@ -49,9 +44,9 @@ public class UpdateScheduleServiceBean {
         ScheduleEntity scheduleFound = scheduleRepository.findByScheduleId(scheduleIdToSearch);
 
         if(scheduleFound == null){
-            log.error("[Host: '{}', IP: '{}', Port: '{}'] Tried to modify schedule: '{}' is not in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), scheduleIdToSearch);
+            log.error("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Tried to update schedule: '{}' which is not in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid, scheduleIdToSearch);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "Wrong guid.", "/updateschedule", HttpStatus.UNAUTHORIZED.value()));
+                    .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "Wrong schedule id.", "/updateschedule", HttpStatus.UNAUTHORIZED.value()));
         }
         else{
             /* update schedule */
@@ -65,12 +60,13 @@ public class UpdateScheduleServiceBean {
         try{
             this.insert(scheduleFound);
         }catch(Exception e){
-            log.error("[Host: '{}', IP: '{}', Port: '{}'] Tried to register but error: '{}' occurred while inserting data.", request.getHeader("Host"), request.getRemoteAddr(), request.getServerPort(), e.getMessage());
+            log.error("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Tried to update schedule but error: '{}' occurred while inserting data.", request.getHeader("Host"), request.getRemoteAddr(), request.getServerPort(), guid, e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error inserting data in DB.");
         }
 
         /* return ack */
-        return ResponseEntity.ok(ApiResponse.resultOk("/updateschedule", "Schedule insertion successfull."));
+        log.info("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] UpdateScheduleServiceBean ok.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
+        return ResponseEntity.ok(ApiResponse.resultOk("/updateschedule", "Schedule updated sucessfully.","{}"));
 
     }
 

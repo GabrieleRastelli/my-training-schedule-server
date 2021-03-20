@@ -21,6 +21,17 @@ public class ExerciseEntity {
     @Column(nullable = true)
     private String category;
 
+    @Column(nullable = true)
+    private String equipment;
+
+    public String getEquipment() {
+        return equipment;
+    }
+
+    public void setEquipment(String equipment) {
+        this.equipment = equipment;
+    }
+
     public Long getExerciseId() {
         return exerciseId;
     }

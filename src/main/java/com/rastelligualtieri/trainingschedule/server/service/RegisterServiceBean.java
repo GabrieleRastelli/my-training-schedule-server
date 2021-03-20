@@ -1,12 +1,10 @@
 package com.rastelligualtieri.trainingschedule.server.service;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.rastelligualtieri.trainingschedule.server.apiresponse.ApiResponse;
 import com.rastelligualtieri.trainingschedule.server.model.UserEntity;
 import com.rastelligualtieri.trainingschedule.server.model.UserRepository;
+import com.rastelligualtieri.trainingschedule.server.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +37,12 @@ public class RegisterServiceBean {
         boolean emailIsOk= (email!=null && !email.isEmpty());
         boolean passwdIsOk= (passwd!=null && !passwd.isEmpty());
 
+        if(!nameIsOk || !emailIsOk || !passwdIsOk){
+            log.warn("[Host: '{}', IP: '{}', Port: '{}'] Tried to register with name: '{}', email: '{}' and passwd that are not all correct.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), name, email);
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                    .body(ApiResponse.resultKo(HttpStatus.TOO_MANY_REQUESTS.toString(), "Wrong data sent.", "/register", HttpStatus.TOO_MANY_REQUESTS.value()));
+        }
+
         /* check that not already registered */
         if(userRepository.findByEmail(email)!=null){
             log.warn("[Host: '{}', IP: '{}', Port: '{}'] Tried to register but email: '{}' is already registered in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), email);
@@ -63,18 +67,14 @@ public class RegisterServiceBean {
         }
 
         /* returns guid */
-        try {
-            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-            String jsonGuid = ow.writeValueAsString(guid);
-            log.info("[Host: '{}', IP: '{}', Port: '{}'] Host correctly registered. Assigned guid: '{}'.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
-            return ResponseEntity.ok(ApiResponse.resultOk("/register", jsonGuid.replaceAll("\\\"","")));
-        } catch (JsonProcessingException e) {
-            log.error("[Host: '{}', IP: '{}', Port: '{}'] Error JSON parsing guid: '{}'.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error json parsing guid.");
-        }
+        String jsonGuid = JsonUtils.stringToJson("guid",guid);
+        log.info("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Host correctly registered.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
+        return ResponseEntity.ok(ApiResponse.resultOk("/register", "Registered sucessfully.", jsonGuid));
+
     }
 
     public void insert(UserEntity request) {
         userRepository.save(request);
     }
+
 }

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -28,6 +30,10 @@ public class ApiResponse {
     @JsonAlias("Message")
     @JsonProperty(value = "message")
     String message;
+    @JsonAlias("Result")
+    @JsonProperty(value = "result")
+    @JsonRawValue
+    String result;
     @JsonAlias("Timestamp")
     @JsonProperty(value = "timestamp")
     String timeStamp;
@@ -43,11 +49,12 @@ public class ApiResponse {
      * @param path
      * @return
      */
-    public static ApiResponse resultOk(String path, String message) {
+    public static ApiResponse resultOk(String path, String message, String result) {
         String time = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ").format(new Date());
         return ApiResponse.builder()
                 .errorCode("")
                 .message(message)
+                .result(result)
                 .timeStamp(time)
                 .status(200)
                 .path(path)
@@ -67,6 +74,7 @@ public class ApiResponse {
         return ApiResponse.builder()
                 .errorCode(code)
                 .message(message)
+                .result("{}")
                 .timeStamp(time)
                 .status(stato)
                 .path(path)
