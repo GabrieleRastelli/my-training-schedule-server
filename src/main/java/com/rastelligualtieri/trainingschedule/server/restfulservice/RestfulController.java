@@ -34,6 +34,9 @@ public class RestfulController {
     @Autowired
     private UpdateScheduleServiceBean updateScheduleService;
 
+    @Autowired
+    private UserInfoServiceBean userInfoService;
+
 
     @PostMapping(path = "/register", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> registerEndpoint(HttpServletRequest request) {
@@ -68,6 +71,11 @@ public class RestfulController {
     @PostMapping(path = "/updateschedule", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> updateScheduleEndpoint(HttpServletRequest request) {
         return updateScheduleService.updateSchedule(request);
+    }
+
+    @PostMapping(path = "/userinfo", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> getUserInfoEndpoint(HttpServletRequest request) {
+        return userInfoService.getUserInfo(request);
     }
 
 }
