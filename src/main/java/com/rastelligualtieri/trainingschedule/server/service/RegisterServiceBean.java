@@ -39,15 +39,15 @@ public class RegisterServiceBean {
 
         if(!nameIsOk || !emailIsOk || !passwdIsOk){
             log.warn("[Host: '{}', IP: '{}', Port: '{}'] Tried to register with name: '{}', email: '{}' and passwd that are not all correct.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), name, email);
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
-                    .body(ApiResponse.resultKo(HttpStatus.TOO_MANY_REQUESTS.toString(), "Wrong data sent.", "/register", HttpStatus.TOO_MANY_REQUESTS.value()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.resultKo(HttpStatus.BAD_REQUEST.toString(), "Wrong data sent.", "/register", HttpStatus.BAD_REQUEST.value()));
         }
 
         /* check that not already registered */
         if(userRepository.findByEmail(email)!=null){
             log.warn("[Host: '{}', IP: '{}', Port: '{}'] Tried to register but email: '{}' is already registered in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), email);
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
-                    .body(ApiResponse.resultKo(HttpStatus.TOO_MANY_REQUESTS.toString(), "You are already registered.", "/register", HttpStatus.TOO_MANY_REQUESTS.value()));
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(ApiResponse.resultKo(HttpStatus.CONFLICT.toString(), "You are already registered.", "/register", HttpStatus.CONFLICT.value()));
         }
 
         /* encrypts password */

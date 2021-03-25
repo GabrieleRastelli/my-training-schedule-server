@@ -45,8 +45,8 @@ public class UpdateScheduleServiceBean {
 
         if(scheduleFound == null){
             log.error("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Tried to update schedule: '{}' which is not in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid, scheduleIdToSearch);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "Wrong schedule id.", "/updateschedule", HttpStatus.UNAUTHORIZED.value()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.resultKo(HttpStatus.NOT_FOUND.toString(), "Wrong schedule id.", "/updateschedule", HttpStatus.NOT_FOUND.value()));
         }
         else{
             /* update schedule */
