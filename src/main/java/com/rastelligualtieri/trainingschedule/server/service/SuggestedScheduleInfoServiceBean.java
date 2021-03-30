@@ -40,7 +40,7 @@ public class SuggestedScheduleInfoServiceBean {
         if(userToSearch==null){
             log.warn("[Host: '{}', IP: '{}', Port: '{}'] Tried to get schedule info but guid: '{}' is not registered in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "Wrong guid.", "/scheduleinfo", HttpStatus.UNAUTHORIZED.value()));
+                    .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "Wrong guid.", "/suggestedinfo", HttpStatus.UNAUTHORIZED.value()));
         }
 
         List<ScheduleGenericInfo> genericScheduleInfo = scheduleRepository.findSuggestedForListing();
