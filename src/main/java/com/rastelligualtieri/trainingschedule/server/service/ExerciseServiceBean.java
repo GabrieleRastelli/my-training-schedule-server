@@ -45,6 +45,7 @@ public class ExerciseServiceBean {
 
         try {
             String jsonExercises = JsonUtils.objectToJson(allExercises);
+            log.info("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Exercises succesfully sent.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
             return ResponseEntity.ok(ApiResponse.resultOk("/exercise", "Extraction succesful.",jsonExercises));
         } catch (JsonProcessingException e) {
             log.error("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Error JSON parsing allExercises: '{}'.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid, e.getMessage());

@@ -48,6 +48,7 @@ public class SuggestedScheduleInfoServiceBean {
         /* converts list to json */
         try {
             String jsonSchedules = JsonUtils.objectToJson(genericScheduleInfo);
+            log.info("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Suggested schedules succesfully sent.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
             return ResponseEntity.ok(ApiResponse.resultOk("/suggestedinfo", "Extraction succesful.", jsonSchedules));
         } catch (JsonProcessingException e) {
             log.error("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Error JSON parsing suggestedScheduleInfo: '{}'.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid, e.getMessage());

@@ -46,6 +46,7 @@ public class HomeInfoServiceBean {
         /* converts list to json */
         try {
             String jsonSchedules = JsonUtils.objectToJson(genericScheduleInfo);
+            log.info("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Home info succesfully sent.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
             return ResponseEntity.ok(ApiResponse.resultOk("/homeinfo", "Extraction succesful.", jsonSchedules));
         } catch (JsonProcessingException e) {
             log.error("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Error JSON parsing genericScheduleInfo: '{}'.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid, e.getMessage());

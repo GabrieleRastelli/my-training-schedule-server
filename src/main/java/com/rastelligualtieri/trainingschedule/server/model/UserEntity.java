@@ -1,13 +1,6 @@
 package com.rastelligualtieri.trainingschedule.server.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 @Entity
@@ -36,6 +29,9 @@ public class UserEntity {
     @Column(nullable = false)
     private String password;
 
+    @Lob
+    private String profileImage;
+
     public UserEntity(){
 
     }
@@ -46,6 +42,14 @@ public class UserEntity {
         this.setName(nome);
         this.setEmail(email);
         this.setPassword(password);
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     public String getGuid() {

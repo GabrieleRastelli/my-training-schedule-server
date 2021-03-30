@@ -41,8 +41,9 @@ public class UserInfoServiceBean {
         JSONObject jsonData = new JSONObject();
         jsonData.put("email", userEntityInfo.getEmail());
         jsonData.put("name", userEntityInfo.getName());
+        jsonData.put("image", userEntityInfo.getProfileImage());
         String data = jsonData.toString();
-        log.info("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Correctly get user info.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
-        return ResponseEntity.ok(ApiResponse.resultOk("/login", "Sucessfully returned user info.", data));
+        log.info("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Correctly sent user info.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
+        return ResponseEntity.ok(ApiResponse.resultOk("/userinfo", "Sucessfully returned user info.", data));
     }
 }
