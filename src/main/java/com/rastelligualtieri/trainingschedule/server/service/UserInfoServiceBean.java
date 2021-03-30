@@ -1,12 +1,9 @@
 package com.rastelligualtieri.trainingschedule.server.service;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rastelligualtieri.trainingschedule.server.apiresponse.ApiResponse;
 import com.rastelligualtieri.trainingschedule.server.model.*;
-import com.rastelligualtieri.trainingschedule.server.utils.JsonUtils;
-import netscape.javascript.JSObject;
-import org.apache.commons.codec.digest.DigestUtils;
+import com.rastelligualtieri.trainingschedule.server.repository.UserRepository;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class UserInfoServiceBean {

@@ -3,6 +3,7 @@ package com.rastelligualtieri.trainingschedule.server.service;
 
 import com.rastelligualtieri.trainingschedule.server.apiresponse.ApiResponse;
 import com.rastelligualtieri.trainingschedule.server.model.*;
+import com.rastelligualtieri.trainingschedule.server.repository.UserRepository;
 import com.rastelligualtieri.trainingschedule.server.utils.JsonUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;

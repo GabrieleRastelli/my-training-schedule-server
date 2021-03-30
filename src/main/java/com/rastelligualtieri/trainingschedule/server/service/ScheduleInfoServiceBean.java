@@ -1,19 +1,17 @@
 package com.rastelligualtieri.trainingschedule.server.service;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.util.DefaultIndenter;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rastelligualtieri.trainingschedule.server.apiresponse.ApiResponse;
 import com.rastelligualtieri.trainingschedule.server.model.*;
+import com.rastelligualtieri.trainingschedule.server.repository.ScheduleRepository;
+import com.rastelligualtieri.trainingschedule.server.repository.UserRepository;
+import com.rastelligualtieri.trainingschedule.server.repository.ExerciseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 

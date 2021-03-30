@@ -23,6 +23,9 @@ public class RestfulController {
     private HomeInfoServiceBean homeInfoService;
 
     @Autowired
+    private SuggestedScheduleInfoServiceBean suggestedScheduleInfoServiceBean;
+
+    @Autowired
     private ExerciseServiceBean exerciseService;
 
     @Autowired
@@ -51,6 +54,11 @@ public class RestfulController {
     @PostMapping(path = "/homeinfo", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> getHomeInfo(HttpServletRequest request) {
         return homeInfoService.getHomeInfo(request);
+    }
+
+    @PostMapping(path = "/suggestedinfo", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> getSuggestedInfo(HttpServletRequest request) {
+        return suggestedScheduleInfoServiceBean.getSuggestedScheduleInfo(request);
     }
 
     @PostMapping(path = "/exercise", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)

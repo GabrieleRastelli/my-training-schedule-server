@@ -2,11 +2,10 @@ package com.rastelligualtieri.trainingschedule.server.service;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.util.DefaultIndenter;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rastelligualtieri.trainingschedule.server.apiresponse.ApiResponse;
 import com.rastelligualtieri.trainingschedule.server.model.*;
+import com.rastelligualtieri.trainingschedule.server.repository.ScheduleRepository;
+import com.rastelligualtieri.trainingschedule.server.repository.UserRepository;
 import com.rastelligualtieri.trainingschedule.server.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

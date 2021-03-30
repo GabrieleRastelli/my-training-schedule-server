@@ -1,7 +1,9 @@
-package com.rastelligualtieri.trainingschedule.server.model;
+package com.rastelligualtieri.trainingschedule.server.repository;
 
 import java.util.List;
 
+import com.rastelligualtieri.trainingschedule.server.model.ScheduleEntity;
+import com.rastelligualtieri.trainingschedule.server.model.ScheduleGenericInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,6 +17,9 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, String
 
     @Query("select new com.rastelligualtieri.trainingschedule.server.model.ScheduleGenericInfo(s.scheduleId, s.title,s.description) from ScheduleEntity s where s.userId = ?1")
     List<ScheduleGenericInfo> findDocumentsForListing(Long userId);
+
+    @Query("select new com.rastelligualtieri.trainingschedule.server.model.ScheduleGenericInfo(s.scheduleId, s.title,s.description) from ScheduleEntity s join SuggestedScheduleEntity ss on s.scheduleId = ss.scheduleId")
+    List<ScheduleGenericInfo> findSuggestedForListing();
 
     List<ScheduleEntity> findByUserId(Long userId);
 

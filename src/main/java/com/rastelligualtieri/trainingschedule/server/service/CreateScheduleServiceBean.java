@@ -3,6 +3,8 @@ package com.rastelligualtieri.trainingschedule.server.service;
 
 import com.rastelligualtieri.trainingschedule.server.apiresponse.ApiResponse;
 import com.rastelligualtieri.trainingschedule.server.model.*;
+import com.rastelligualtieri.trainingschedule.server.repository.ScheduleRepository;
+import com.rastelligualtieri.trainingschedule.server.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
