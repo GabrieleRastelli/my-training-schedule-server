@@ -29,6 +29,15 @@ public class ScheduleEntity {
     private String description;
 
     @Column(nullable = true)
+    private String categoria1;
+
+    @Column(nullable = true)
+    private String categoria2;
+
+    @Column(nullable = true)
+    private String equipment;
+
+    @Column(nullable = true)
     private Integer downloads;
 
     public ScheduleEntity(){ }
@@ -39,6 +48,17 @@ public class ScheduleEntity {
         this.setDataJson(dataJson);
         this.setTitle(title);
         this.setDescription(description);
+    }
+
+    public ScheduleEntity(Long userId,String dataJson, String title, String description, String categoria1, String categoria2, String equipment){
+        super();
+        this.setUserId(userId);
+        this.setDataJson(dataJson);
+        this.setTitle(title);
+        this.setDescription(description);
+        this.setCategoria1(categoria1);
+        this.setCategoria2(categoria2);
+        this.setEquipment(equipment);
     }
 
     public Long getScheduleId() {
@@ -87,5 +107,29 @@ public class ScheduleEntity {
 
     public void setDownloads(Integer downloads) {
         this.downloads = downloads;
+    }
+
+    public String getCategoria1() {
+        return categoria1;
+    }
+
+    public void setCategoria1(String categoria1) {
+        this.categoria1 = categoria1;
+    }
+
+    public String getCategoria2() {
+        return categoria2;
+    }
+
+    public void setCategoria2(String categoria2) {
+        this.categoria2 = categoria2;
+    }
+
+    public String getEquipment() {
+        return equipment;
+    }
+
+    public void setEquipment(String equipment) {
+        this.equipment = equipment;
     }
 }

@@ -5,6 +5,8 @@ import com.rastelligualtieri.trainingschedule.server.apiresponse.ApiResponse;
 import com.rastelligualtieri.trainingschedule.server.model.*;
 import com.rastelligualtieri.trainingschedule.server.repository.ScheduleRepository;
 import com.rastelligualtieri.trainingschedule.server.repository.UserRepository;
+import com.rastelligualtieri.trainingschedule.server.utils.ScheduleStatistic;
+import com.rastelligualtieri.trainingschedule.server.utils.ScheduleUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +43,10 @@ public class CreateScheduleServiceBean {
                     .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "Wrong guid.", "/createschedule", HttpStatus.UNAUTHORIZED.value()));
         }
 
+        ScheduleStatistic statistic= ScheduleUtils.calculateStatistics(dataJson);
+
         /* check that schedule exists */
-        ScheduleEntity scheduleFound = new ScheduleEntity(userToSearch.getUserId(), dataJson, title, description);
+        ScheduleEntity scheduleFound = new ScheduleEntity(userToSearch.getUserId(), dataJson, title, description, statistic.getCategoria1(), statistic.getCategoria2(), statistic.getEquipmentNedeed());
 
         /* insert schedule */
         try{

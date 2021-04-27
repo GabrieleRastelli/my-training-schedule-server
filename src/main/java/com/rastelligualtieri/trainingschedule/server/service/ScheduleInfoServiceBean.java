@@ -1,19 +1,25 @@
 package com.rastelligualtieri.trainingschedule.server.service;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rastelligualtieri.trainingschedule.server.apiresponse.ApiResponse;
 import com.rastelligualtieri.trainingschedule.server.model.*;
 import com.rastelligualtieri.trainingschedule.server.repository.ScheduleRepository;
 import com.rastelligualtieri.trainingschedule.server.repository.UserRepository;
 import com.rastelligualtieri.trainingschedule.server.repository.ExerciseRepository;
+import com.rastelligualtieri.trainingschedule.server.utils.JsonUtils;
+import org.apache.commons.text.StringEscapeUtils;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Service
 public class ScheduleInfoServiceBean {
@@ -51,9 +57,16 @@ public class ScheduleInfoServiceBean {
                     .body(ApiResponse.resultKo(HttpStatus.NOT_FOUND.toString(), "Schedule id not found.", "/scheduleinfo", HttpStatus.UNAUTHORIZED.value()));
         }
 
-        /* only returns datajson representing schedule */
-        String dataJson = scheduleFound.getDataJson();
-        log.info("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] ScheduleInfoServiceBean ok.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
-        return ResponseEntity.ok(ApiResponse.resultOk("/scheduleinfo", "Extraction succesful.", dataJson));
+        ScheduleEntity scheduleInfo = scheduleRepository.findByScheduleId(scheduleFound.getScheduleId());
+
+        /* converts list to json */
+        try {
+            String jsonSchedules = JsonUtils.objectToJson(scheduleInfo);
+            log.info("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Schedule info succesfully retrieved.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
+            return ResponseEntity.ok(ApiResponse.resultOk("/scheduleinfo", "Extraction succesful.", jsonSchedules));
+        } catch (JsonProcessingException e) {
+            log.error("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Error JSON parsing ScheduleInfo: '{}'.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error json parsing schedules info.");
+        }
     }
 }

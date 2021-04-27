@@ -5,6 +5,8 @@ import com.rastelligualtieri.trainingschedule.server.apiresponse.ApiResponse;
 import com.rastelligualtieri.trainingschedule.server.model.*;
 import com.rastelligualtieri.trainingschedule.server.repository.ScheduleRepository;
 import com.rastelligualtieri.trainingschedule.server.repository.UserRepository;
+import com.rastelligualtieri.trainingschedule.server.utils.ScheduleStatistic;
+import com.rastelligualtieri.trainingschedule.server.utils.ScheduleUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +54,10 @@ public class UpdateScheduleServiceBean {
         }
         else{
             /* update schedule */
+            ScheduleStatistic statistic= ScheduleUtils.calculateStatistics(dataJson);
+            scheduleFound.setCategoria1(statistic.getCategoria1());
+            scheduleFound.setCategoria2(statistic.getCategoria2());
+            scheduleFound.setEquipment(statistic.getEquipmentNedeed());
             scheduleFound.setUserId(userToSearch.getUserId());
             scheduleFound.setTitle(title);
             scheduleFound.setDescription(description);

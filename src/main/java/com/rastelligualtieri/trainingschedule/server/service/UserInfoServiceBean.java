@@ -1,9 +1,11 @@
 package com.rastelligualtieri.trainingschedule.server.service;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rastelligualtieri.trainingschedule.server.apiresponse.ApiResponse;
 import com.rastelligualtieri.trainingschedule.server.model.*;
 import com.rastelligualtieri.trainingschedule.server.repository.UserRepository;
+import com.rastelligualtieri.trainingschedule.server.utils.JsonUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -35,15 +38,15 @@ public class UserInfoServiceBean {
                     .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "Wrong guid.", "/userinfo", HttpStatus.UNAUTHORIZED.value()));
         }
 
-        UserEntity userEntityInfo = userRepository.findByGuid(guid);
+        UserInfo userEntityInfo = userRepository.findUserInfo(userToSearch.getUserId());
 
-        /* returns guid */
-        JSONObject jsonData = new JSONObject();
-        jsonData.put("email", userEntityInfo.getEmail());
-        jsonData.put("name", userEntityInfo.getName());
-        jsonData.put("image", userEntityInfo.getProfileImage());
-        String data = jsonData.toString();
-        log.info("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Correctly sent user info.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
-        return ResponseEntity.ok(ApiResponse.resultOk("/userinfo", "Sucessfully returned user info.", data));
+        try {
+            String user = JsonUtils.objectToJson(userEntityInfo);
+            log.info("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Sucessfully returned user info.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
+            return ResponseEntity.ok(ApiResponse.resultOk("/userinfo", "Sucessfully returned user info.", user));
+        } catch (JsonProcessingException e) {
+            log.error("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Error JSON parsing UserInfo: '{}'.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error json parsing user info.");
+        }
     }
 }
