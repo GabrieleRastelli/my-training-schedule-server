@@ -26,10 +26,10 @@ public abstract class JsonUtils {
         mapper.setDefaultPrettyPrinter(p);
         String jsonSchedules = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
         /* removes eventual escaping */
-        jsonSchedules=jsonSchedules.replaceAll("\\\\n","");
+        /*jsonSchedules=jsonSchedules.replaceAll("\\\\n","");
         jsonSchedules=jsonSchedules.replaceAll("\\\\t","");
         jsonSchedules=jsonSchedules.replaceAll("\\\\r","");
-        jsonSchedules=jsonSchedules.replaceAll("\\\\\"","");
+        jsonSchedules=jsonSchedules.replaceAll("\\\\\"","");*/
         return jsonSchedules;
     }
 
