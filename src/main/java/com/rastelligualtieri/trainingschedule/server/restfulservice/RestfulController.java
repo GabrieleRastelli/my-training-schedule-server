@@ -40,6 +40,9 @@ public class RestfulController {
     @Autowired
     private UserInfoServiceBean userInfoService;
 
+    @Autowired
+    private DeleteScheduleServiceBean deleteScheduleService;
+
 
     @PostMapping(path = "/register", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> registerEndpoint(HttpServletRequest request) {
@@ -84,6 +87,11 @@ public class RestfulController {
     @PostMapping(path = "/userinfo", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> getUserInfoEndpoint(HttpServletRequest request) {
         return userInfoService.getUserInfo(request);
+    }
+
+    @PostMapping(path = "/deleteschedule", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> deleteScheduleEndpoint(HttpServletRequest request) {
+        return deleteScheduleService.deleteSchedule(request);
     }
 
 }
