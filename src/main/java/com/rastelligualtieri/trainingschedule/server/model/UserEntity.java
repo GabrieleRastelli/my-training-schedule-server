@@ -19,6 +19,9 @@ public class UserEntity {
     private String guid;
 
     @Column(nullable = false)
+    private String nickname;
+
+    @Column(nullable = false)
     private String name;
 
 
@@ -36,12 +39,21 @@ public class UserEntity {
 
     }
 
-    public UserEntity( String guid, String nome, String email, String password) {
+    public UserEntity( String guid, String nickname, String nome, String email, String password) {
         super();
+        this.setNickname(nickname);
         this.setGuid(guid);
         this.setName(nome);
         this.setEmail(email);
         this.setPassword(password);
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getProfileImage() {
