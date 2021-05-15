@@ -24,4 +24,7 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, String
     List<ScheduleEntity> findByUserId(Long userId);
 
     ScheduleEntity findByScheduleId(Long scheduleId);
+
+    @Query("select new com.rastelligualtieri.trainingschedule.server.model.ScheduleGenericInfo(s.scheduleId, s.title,s.description, s.categoria1, s.categoria2, s.equipment, s.creator) from ScheduleEntity s")
+    List<ScheduleGenericInfo> findAllSchedules();
 }

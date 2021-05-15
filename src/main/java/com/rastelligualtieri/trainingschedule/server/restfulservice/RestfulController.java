@@ -43,6 +43,8 @@ public class RestfulController {
     @Autowired
     private DeleteScheduleServiceBean deleteScheduleService;
 
+    @Autowired
+    private AllSchedulesServiceBean allSchedulesServiceBean;
 
     @PostMapping(path = "/register", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> registerEndpoint(HttpServletRequest request) {
@@ -94,4 +96,8 @@ public class RestfulController {
         return deleteScheduleService.deleteSchedule(request);
     }
 
+    @PostMapping(path = "/allschedules", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> allScheduleaEndpoint(HttpServletRequest request) {
+        return allSchedulesServiceBean.getAll(request);
+    }
 }
