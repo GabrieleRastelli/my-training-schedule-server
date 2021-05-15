@@ -40,6 +40,9 @@ public class ScheduleEntity {
     @Column(nullable = true)
     private Integer downloads;
 
+    @Column(nullable = false)
+    private String creator;
+
     public ScheduleEntity(){ }
 
     public ScheduleEntity(Long userId,String dataJson, String title, String description){
@@ -50,7 +53,7 @@ public class ScheduleEntity {
         this.setDescription(description);
     }
 
-    public ScheduleEntity(Long userId,String dataJson, String title, String description, String categoria1, String categoria2, String equipment){
+    public ScheduleEntity(Long userId,String dataJson, String title, String description, String categoria1, String categoria2, String equipment, String creator){
         super();
         this.setUserId(userId);
         this.setDataJson(dataJson);
@@ -59,6 +62,7 @@ public class ScheduleEntity {
         this.setCategoria1(categoria1);
         this.setCategoria2(categoria2);
         this.setEquipment(equipment);
+        this.setCreator(creator);
     }
 
     public Long getScheduleId() {
@@ -131,5 +135,13 @@ public class ScheduleEntity {
 
     public void setEquipment(String equipment) {
         this.equipment = equipment;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 }
