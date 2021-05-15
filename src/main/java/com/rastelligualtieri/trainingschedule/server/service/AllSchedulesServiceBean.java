@@ -37,7 +37,7 @@ public class AllSchedulesServiceBean {
         /* check that user is registered */
         UserEntity userToSearch = userRepository.findByGuid(guid);
         if(userToSearch==null){
-            log.warn("[Host: '{}', IP: '{}', Port: '{}'] Tried to get home info but guid: '{}' is not registered in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
+            log.warn("[Host: '{}', IP: '{}', Port: '{}'] Tried to get all schedules but guid: '{}' is not registered in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "Wrong guid.", "/homeinfo", HttpStatus.UNAUTHORIZED.value()));
         }
@@ -47,11 +47,11 @@ public class AllSchedulesServiceBean {
         /* converts list to json */
         try {
             String jsonSchedules = JsonUtils.objectToJson(genericScheduleInfo);
-            log.info("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Home info succesfully sent.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
+            log.info("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] All schedules succesfully sent.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
             return ResponseEntity.ok(ApiResponse.resultOk("/homeinfo", "Extraction succesful.", jsonSchedules));
         } catch (JsonProcessingException e) {
             log.error("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Error JSON parsing genericScheduleInfo: '{}'.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid, e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error json parsing schedules info.");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error json parsing all schedules.");
         }
     }
 }
