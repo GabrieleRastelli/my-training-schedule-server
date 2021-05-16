@@ -17,8 +17,10 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
 
     UserEntity findByEmail(String email);
 
+    UserEntity findByNickname(String nickname);
+
     UserEntity findByGuid(String guid);
 
-    @Query("select new com.rastelligualtieri.trainingschedule.server.model.UserInfo(u.userId, u.guid, u.name, u.email, u.profileImage) from UserEntity u where u.userId = ?1")
+    @Query("select new com.rastelligualtieri.trainingschedule.server.model.UserInfo(u.userId, u.nickname, u.guid, u.name, u.email, u.profileImage) from UserEntity u where u.userId = ?1")
     UserInfo findUserInfo(Long userId);
 }

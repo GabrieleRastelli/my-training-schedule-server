@@ -46,7 +46,7 @@ public class CreateScheduleServiceBean {
         ScheduleStatistic statistic= ScheduleUtils.calculateStatistics(dataJson);
 
         /* check that schedule exists */
-        ScheduleEntity scheduleFound = new ScheduleEntity(userToSearch.getUserId(), dataJson, title, description, statistic.getCategoria1(), statistic.getCategoria2(), statistic.getEquipmentNedeed());
+        ScheduleEntity scheduleFound = new ScheduleEntity(userToSearch.getUserId(), dataJson, title, description, statistic.getCategoria1(), statistic.getCategoria2(), statistic.getEquipmentNedeed(),userToSearch.getNickname());
 
         /* insert schedule */
         try{

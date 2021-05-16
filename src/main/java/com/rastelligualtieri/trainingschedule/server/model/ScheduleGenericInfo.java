@@ -10,14 +10,16 @@ public class ScheduleGenericInfo{
     private String categoria1;
     private String categoria2;
     private String equipment;
+    private String creator;
 
-    public ScheduleGenericInfo(Long scheduleId,String title, String description, String categoria1, String categoria2, String equipment){
+    public ScheduleGenericInfo(Long scheduleId,String title, String description, String categoria1, String categoria2, String equipment, String creator){
         this.setScheduleId(scheduleId);
         this.setTitle(title);
         this.setDescription(description);
         this.setCategoria1(categoria1);
         this.setCategoria2(categoria2);
         this.setEquipment(equipment);
+        this.setCreator(creator);
     }
 
     public Long getScheduleId() {
@@ -66,5 +68,13 @@ public class ScheduleGenericInfo{
 
     public void setEquipment(String equipment) {
         this.equipment = equipment;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 }

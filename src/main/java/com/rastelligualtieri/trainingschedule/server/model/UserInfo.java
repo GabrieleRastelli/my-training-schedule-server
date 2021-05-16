@@ -9,6 +9,8 @@ import javax.persistence.Lob;
 public class UserInfo {
     private Long userId;
 
+    private String nickname;
+
     private String guid;
 
     private String name;
@@ -22,13 +24,22 @@ public class UserInfo {
 
     }
 
-    public UserInfo( Long uid, String guid, String nome, String email, String profileImage) {
+    public UserInfo( Long uid, String nickname, String guid, String nome, String email, String profileImage) {
         super();
+        this.setNickname(nickname);
         this.setUserId(uid);
         this.setGuid(guid);
         this.setName(nome);
         this.setEmail(email);
         this.setProfileImage(profileImage);
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getProfileImage() {
