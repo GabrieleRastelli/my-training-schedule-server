@@ -46,6 +46,12 @@ public class RestfulController {
     @Autowired
     private AllSchedulesServiceBean allSchedulesServiceBean;
 
+    @Autowired
+    private DownloadScheduleServiceBean downloadScheduleServiceBean;
+
+    @Autowired
+    private UpdateUserServiceBean updateUserService;
+
     @PostMapping(path = "/register", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> registerEndpoint(HttpServletRequest request) {
         return registerService.registerUser(request);
@@ -97,7 +103,17 @@ public class RestfulController {
     }
 
     @PostMapping(path = "/allschedules", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse> allScheduleaEndpoint(HttpServletRequest request) {
+    public ResponseEntity<ApiResponse> allScheduleEndpoint(HttpServletRequest request) {
         return allSchedulesServiceBean.getAll(request);
+    }
+
+    @PostMapping(path = "/downloadschedule", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> downloadScheduleEndpoint(HttpServletRequest request) {
+        return downloadScheduleServiceBean.download(request);
+    }
+
+    @PostMapping(path = "/updateuser", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> updateUserEndpoint(HttpServletRequest request) {
+        return updateUserService.updateUser(request);
     }
 }
