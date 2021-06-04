@@ -11,6 +11,7 @@ import com.rastelligualtieri.trainingschedule.server.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,9 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Service
-public class AllSchedulesServiceBean {
+public class PopularSchedulesServiceBean {
 
-    private static Logger log = LoggerFactory.getLogger(AllSchedulesServiceBean.class);
+    private static Logger log = LoggerFactory.getLogger(PopularSchedulesServiceBean.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -30,25 +31,25 @@ public class AllSchedulesServiceBean {
     @Autowired
     private ScheduleRepository scheduleRepository;
 
-    public ResponseEntity<ApiResponse> getAll(HttpServletRequest request){
+    public ResponseEntity<ApiResponse> getPopular(HttpServletRequest request){
 
         String guid = request.getParameter("guid");
 
         /* check that user is registered */
         UserEntity userToSearch = userRepository.findByGuid(guid);
         if(userToSearch==null){
-            log.warn("[Host: '{}', IP: '{}', Port: '{}'] Tried to get all schedules but guid: '{}' is not registered in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
+            log.warn("[Host: '{}', IP: '{}', Port: '{}'] Tried to get popular schedules but guid: '{}' is not registered in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "Wrong guid.", "/allschedules", HttpStatus.UNAUTHORIZED.value()));
+                    .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "Wrong guid.", "/homeinfo", HttpStatus.UNAUTHORIZED.value()));
         }
 
-        List<ScheduleGenericInfo> genericScheduleInfo = scheduleRepository.findAllSchedules();
+        List<ScheduleGenericInfo> genericScheduleInfo = scheduleRepository.findPopularSchedules(new PageRequest(0,5));
 
         /* converts list to json */
         try {
             String jsonSchedules = JsonUtils.objectToJson(genericScheduleInfo);
-            log.info("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] All schedules succesfully sent.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
-            return ResponseEntity.ok(ApiResponse.resultOk("/allschedules", "Extraction succesful.", jsonSchedules));
+            log.info("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Popular schedules succesfully sent.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid);
+            return ResponseEntity.ok(ApiResponse.resultOk("/homeinfo", "Extraction succesful.", jsonSchedules));
         } catch (JsonProcessingException e) {
             log.error("[Host: '{}', IP: '{}', Port: '{}', GUID: '{}'] Error JSON parsing genericScheduleInfo: '{}'.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), guid, e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error json parsing all schedules.");

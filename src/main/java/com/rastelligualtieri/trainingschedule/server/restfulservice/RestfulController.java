@@ -52,6 +52,9 @@ public class RestfulController {
     @Autowired
     private UpdateUserServiceBean updateUserService;
 
+    @Autowired
+    private PopularSchedulesServiceBean popularSchedulesServiceBean;
+
     @PostMapping(path = "/register", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> registerEndpoint(HttpServletRequest request) {
         return registerService.registerUser(request);
@@ -115,5 +118,10 @@ public class RestfulController {
     @PostMapping(path = "/updateuser", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> updateUserEndpoint(HttpServletRequest request) {
         return updateUserService.updateUser(request);
+    }
+
+    @PostMapping(path = "/popularschedules", consumes = "application/x-www-form-urlencoded", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> popularScheduleEndpoint(HttpServletRequest request) {
+        return popularSchedulesServiceBean.getPopular(request);
     }
 }

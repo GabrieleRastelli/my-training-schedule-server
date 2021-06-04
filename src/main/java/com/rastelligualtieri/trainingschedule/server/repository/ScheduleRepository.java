@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.rastelligualtieri.trainingschedule.server.model.ScheduleEntity;
 import com.rastelligualtieri.trainingschedule.server.model.ScheduleGenericInfo;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -27,4 +28,7 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, String
 
     @Query("select new com.rastelligualtieri.trainingschedule.server.model.ScheduleGenericInfo(s.scheduleId, s.title,s.description, s.categoria1, s.categoria2, s.equipment, s.creator, s.downloads) from ScheduleEntity s")
     List<ScheduleGenericInfo> findAllSchedules();
+
+    @Query("select new com.rastelligualtieri.trainingschedule.server.model.ScheduleGenericInfo(s.scheduleId, s.title,s.description, s.categoria1, s.categoria2, s.equipment, s.creator, s.downloads) from ScheduleEntity s order by s.downloads desc")
+    List<ScheduleGenericInfo> findPopularSchedules(Pageable pageable);
 }
