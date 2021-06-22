@@ -43,9 +43,22 @@ public class UpdateUserServiceBean {
                     .body(ApiResponse.resultKo(HttpStatus.UNAUTHORIZED.toString(), "Wrong guid.", "/updateuser", HttpStatus.UNAUTHORIZED.value()));
         }
 
+
         userToSearch.setName(name);
         userToSearch.setEmail(email);
-        userToSearch.setNickname(nickname);
+        if(userToSearch.getNickname().equals(nickname)) { /* nickname unchanged */
+            userToSearch.setNickname(nickname);
+        }
+        else{
+            /* check that nickname is free */
+            if(userRepository.findByNickname(nickname)!=null){
+                log.warn("[Host: '{}', IP: '{}', Port: '{}'] Tried to register but nickname: '{}' is already registered in DB.", request.getHeader("Host"),request.getRemoteAddr(),request.getServerPort(), nickname);
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(ApiResponse.resultKo(HttpStatus.CONFLICT.toString(), "Nickname already registered.", "/updateuser", HttpStatus.CONFLICT.value()));
+            }
+            userToSearch.setNickname(nickname);
+        }
+
         userToSearch.setProfileImage(image);
 
         /* insert user */
