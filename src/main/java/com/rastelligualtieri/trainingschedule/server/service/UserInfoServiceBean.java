@@ -44,8 +44,11 @@ public class UserInfoServiceBean {
         UserInfo userEntityInfo = userRepository.findUserInfo(userToSearch.getUserId());
         CreatedDownloadInfo cdInfo = scheduleRepository.findCreatedAndDownloads(userToSearch.getUserId());
 
-        userEntityInfo.setCreated(cdInfo.getCreated());
-        userEntityInfo.setDownload(cdInfo.getDownload());
+        if (cdInfo!=null){
+            userEntityInfo.setCreated(cdInfo.getCreated());
+            userEntityInfo.setDownload(cdInfo.getDownload());
+        }
+
 
         try {
             String user = JsonUtils.objectToJson(userEntityInfo);
