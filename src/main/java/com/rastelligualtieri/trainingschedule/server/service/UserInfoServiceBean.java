@@ -4,6 +4,7 @@ package com.rastelligualtieri.trainingschedule.server.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rastelligualtieri.trainingschedule.server.apiresponse.ApiResponse;
 import com.rastelligualtieri.trainingschedule.server.model.*;
+import com.rastelligualtieri.trainingschedule.server.repository.ScheduleRepository;
 import com.rastelligualtieri.trainingschedule.server.repository.UserRepository;
 import com.rastelligualtieri.trainingschedule.server.utils.JsonUtils;
 import org.json.JSONObject;
@@ -25,6 +26,8 @@ public class UserInfoServiceBean {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
     public ResponseEntity<ApiResponse> getUserInfo(HttpServletRequest request){
 
@@ -39,6 +42,10 @@ public class UserInfoServiceBean {
         }
 
         UserInfo userEntityInfo = userRepository.findUserInfo(userToSearch.getUserId());
+        CreatedDownloadInfo cdInfo = scheduleRepository.findCreatedAndDownloads(userToSearch.getUserId());
+
+        userEntityInfo.setCreated(cdInfo.getCreated());
+        userEntityInfo.setDownload(cdInfo.getDownload());
 
         try {
             String user = JsonUtils.objectToJson(userEntityInfo);

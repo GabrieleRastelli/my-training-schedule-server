@@ -17,8 +17,11 @@ public class UserInfo {
 
     private String email;
 
-
     private String profileImage;
+
+    private long created;
+
+    private long download;
 
     public UserInfo(){
 
@@ -32,6 +35,24 @@ public class UserInfo {
         this.setName(nome);
         this.setEmail(email);
         this.setProfileImage(profileImage);
+        this.setCreated(0);
+        this.setDownload(0);
+    }
+
+    public long getCreated() {
+        return created;
+    }
+
+    public void setCreated(long created) {
+        this.created = created;
+    }
+
+    public long getDownload() {
+        return download;
+    }
+
+    public void setDownload(long download) {
+        this.download = download;
     }
 
     public String getNickname() {

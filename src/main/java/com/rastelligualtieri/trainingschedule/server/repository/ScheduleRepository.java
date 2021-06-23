@@ -2,6 +2,7 @@ package com.rastelligualtieri.trainingschedule.server.repository;
 
 import java.util.List;
 
+import com.rastelligualtieri.trainingschedule.server.model.CreatedDownloadInfo;
 import com.rastelligualtieri.trainingschedule.server.model.ScheduleEntity;
 import com.rastelligualtieri.trainingschedule.server.model.ScheduleGenericInfo;
 import org.springframework.data.domain.Pageable;
@@ -31,4 +32,15 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, String
 
     @Query("select new com.rastelligualtieri.trainingschedule.server.model.ScheduleGenericInfo(s.scheduleId, s.title,s.description, s.categoria1, s.categoria2, s.equipment, s.creator, s.downloads) from ScheduleEntity s order by s.downloads desc")
     List<ScheduleGenericInfo> findPopularSchedules(Pageable pageable);
+
+    @Query(value = "select new com.rastelligualtieri.trainingschedule.server.model.CreatedDownloadInfo(s.userId, s.creator, count(s.creator), sum(s.downloads))" +
+                    "FROM ScheduleEntity s " +
+                    "where s.userId=?1 " +
+                    "and exists (" +
+                        "select u.userId " +
+                        "from UserEntity u " +
+                        "where s.userId=u.userId " +
+                        "and s.creator=u.nickname) " +
+                    "group by s.userId,s.creator")
+    CreatedDownloadInfo findCreatedAndDownloads(Long scheduleId);
 }
