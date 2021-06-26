@@ -8,15 +8,15 @@ public class CreatedDownloadInfo {
 
     private String creator;
 
-    private long created;
+    private Long created;
 
-    private long download;
+    private Long download;
 
     public CreatedDownloadInfo(){
 
     }
 
-    public CreatedDownloadInfo(Long userId, String creator, long created, long download) {
+    public CreatedDownloadInfo(Long userId, String creator, Long created, Long download) {
         this.userId = userId;
         this.creator = creator;
         this.created = created;
@@ -31,19 +31,19 @@ public class CreatedDownloadInfo {
         this.userId = userId;
     }
 
-    public long getCreated() {
+    public Long getCreated() {
         return created;
     }
 
-    public void setCreated(long created) {
+    public void setCreated(Long created) {
         this.created = created;
     }
 
-    public long getDownload() {
+    public Long getDownload() {
         return download;
     }
 
-    public void setDownload(long download) {
+    public void setDownload(Long download) {
         this.download = download;
     }
 

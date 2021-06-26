@@ -19,9 +19,9 @@ public class UserInfo {
 
     private String profileImage;
 
-    private long created;
+    private Long created;
 
-    private long download;
+    private Long download;
 
     public UserInfo(){
 
@@ -35,23 +35,23 @@ public class UserInfo {
         this.setName(nome);
         this.setEmail(email);
         this.setProfileImage(profileImage);
-        this.setCreated(0);
-        this.setDownload(0);
+        this.setCreated(0L);
+        this.setDownload(0L);
     }
 
-    public long getCreated() {
+    public Long getCreated() {
         return created;
     }
 
-    public void setCreated(long created) {
+    public void setCreated(Long created) {
         this.created = created;
     }
 
-    public long getDownload() {
+    public Long getDownload() {
         return download;
     }
 
-    public void setDownload(long download) {
+    public void setDownload(Long download) {
         this.download = download;
     }
 
